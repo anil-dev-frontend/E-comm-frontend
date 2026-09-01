@@ -1,0 +1,106 @@
+<div class="px-4 mt-10 flex justify-center items-center min-h-[80vh]">
+  <div class="shadow-md rounded-xl p-8 bg-white w-full max-w-2xl border border-gray-100/50 mb-10">
+    
+    <h1 class="text-3xl font-normal mb-8 text-center text-gray-900 tracking-wide">
+      {{ isEditMode ? 'Update Product' : 'Add New Product' }}
+    </h1>
+
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="block w-full">
+      <div class="flex flex-col gap-5 mb-6">
+        
+        <!-- Product Name -->
+        <div class="w-full">
+          <input type="text" formControlName="name" placeholder="Name*" class="w-full px-4 py-3 bg-[#e9e7f2] hover:bg-[#e2dfed] focus:bg-[#dbd7e9] text-gray-800 rounded-lg outline-none transition duration-200 text-sm font-medium shadow-inner">
+        </div>
+
+         <!-- 1. DYNAMIC CATEGORY DROPDOWN WITH VALUE FORCE BINDING -->
+        <div class="w-full">
+          <select formControlName="categoryId" 
+                  [value]="productForm.get('categoryId')?.value"
+                  class="w-full px-4 py-3 bg-[#e9e7f2] hover:bg-[#e2dfed] focus:bg-[#dbd7e9] text-gray-800 rounded-lg outline-none transition duration-200 text-sm font-medium shadow-inner appearance-none cursor-pointer">
+            <option value="" disabled selected>Select Category*</option>
+            <option *ngFor="let cat of categoriesList" [value]="cat._id">
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- 2. DYNAMIC BRAND DROPDOWN WITH VALUE FORCE BINDING -->
+        <div class="w-full">
+          <select formControlName="brandId" 
+                  [value]="productForm.get('brandId')?.value"
+                  class="w-full px-4 py-3 bg-[#e9e7f2] hover:bg-[#e2dfed] focus:bg-[#dbd7e9] text-gray-800 rounded-lg outline-none transition duration-200 text-sm font-medium shadow-inner appearance-none cursor-pointer">
+            <option value="" disabled selected>Select Brand*</option>
+            <option *ngFor="let b of brandsList" [value]="b._id">
+              {{ b.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Short Description -->
+        <div class="w-full">
+          <input type="text" formControlName="shortDescription" placeholder="Short Description*" class="w-full px-4 py-3 bg-[#e9e7f2] hover:bg-[#e2dfed] focus:bg-[#dbd7e9] text-gray-800 rounded-lg outline-none transition duration-200 text-sm font-medium shadow-inner">
+        </div>
+
+        <!-- Price -->
+        <div class="w-full">
+          <input type="number" formControlName="price" placeholder="Price*" class="w-full px-4 py-3 bg-[#e9e7f2] hover:bg-[#e2dfed] focus:bg-[#dbd7e9] text-gray-800 rounded-lg outline-none transition duration-200 text-sm font-medium shadow-inner">
+        </div>
+
+        <!-- Discount -->
+        <div class="w-full">
+          <input type="number" formControlName="discount" placeholder="Discount" class="w-full px-4 py-3 bg-[#e9e7f2] hover:bg-[#e2dfed] focus:bg-[#dbd7e9] text-gray-800 rounded-lg outline-none transition duration-200 text-sm font-medium shadow-inner">
+        </div>
+
+        <div class="w-full flex items-center gap-8 py-2 col-span-2">
+          
+          <!-- 1. Is Featured Checkbox Toggle -->
+          <label class="flex items-center gap-2.5 cursor-pointer text-sm font-medium text-gray-700 select-none">
+            <input type="checkbox" 
+                   formControlName="isFeatured" 
+                   class="w-4 h-4 rounded text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 cursor-pointer shadow-inner">
+            Is Featured Product
+          </label>
+
+          <!-- 2. Is New Checkbox Toggle -->
+          <label class="flex items-center gap-2.5 cursor-pointer text-sm font-medium text-gray-700 select-none">
+            <input type="checkbox" 
+                   formControlName="isNewProduct" 
+                   class="w-4 h-4 rounded text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 cursor-pointer shadow-inner">
+            Is New Product
+          </label>
+
+        </div>
+
+        <!-- Description Textarea -->
+        <div class="w-full">
+          <textarea formControlName="description" rows="4" placeholder="Description*" class="w-full px-4 py-3 bg-[#e9e7f2] hover:bg-[#e2dfed] focus:bg-[#dbd7e9] text-gray-800 rounded-lg outline-none transition duration-200 text-sm font-medium shadow-inner resize-y min-h-[100px]"></textarea>
+        </div>
+
+        <!-- Dynamic Images Array Block -->
+        <div formArrayName="imageUrl" class="w-full mt-2">
+          <div class="flex justify-between items-center mb-3">
+            <h2 class="text-2xl font-normal text-gray-900 tracking-wide">Images</h2>
+            <button type="button" (click)="addImageField()" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-md font-semibold border border-blue-200 transition">+ Add Image</button>
+          </div>
+
+          <div *ngFor="let control of imageUrls.controls; let i = index" class="flex items-center gap-3 mb-4 w-full">
+            <div class="w-full">
+              <input type="text" [formControlName]="i" [placeholder]="'Images ' + (i + 1)" class="w-full px-4 py-3 bg-[#e9e7f2] hover:bg-[#e2dfed] focus:bg-[#dbd7e9] text-gray-800 rounded-lg outline-none transition duration-200 text-sm font-medium shadow-inner">
+            </div>
+            <button type="button" (click)="removeImageField(i)" [disabled]="imageUrls.length === 1" class="text-red-500 hover:text-red-700 text-sm font-medium disabled:opacity-30 transition">Remove</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-center mt-8 w-full">
+        <button type="submit" [disabled]="productForm.invalid || isSubmitting" class="border border-gray-300 text-gray-700 font-normal hover:bg-gray-50 px-10 py-1.5 rounded-full transition text-sm shadow-sm bg-white">
+          {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update' : 'Add') }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

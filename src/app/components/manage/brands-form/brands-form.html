@@ -1,0 +1,40 @@
+<div class="px-4 mt-10 flex justify-center items-center min-h-[50vh]">
+  <!-- Card container ko full block grid diya -->
+  <div class="shadow-xl rounded-2xl p-8 bg-white w-full max-w-md border border-gray-100">
+    
+    <!-- Dynamic Header -->
+    <h1 class="text-xl font-bold mb-6 text-center text-gray-800 tracking-wide">
+      {{ isEditMode ? 'Update Brand' : 'Add New Brand' }}
+    </h1>
+
+    <form [formGroup]="brandForm" (ngSubmit)="onSubmit()" class="block w-full">
+      <div class="mb-4 block w-full">
+        
+        <!-- mat-form-field ke sath block style ensure kiya -->
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="block w-full text-sm">
+          <mat-label>Brand Name</mat-label>
+          <input type="text" matInput formControlName="name" placeholder="Ex. Nike, Samsung" class="w-full">
+        </mat-form-field>
+
+        <!-- Dynamic Validation display -->
+        <div *ngIf="brandForm.get('name')?.touched && brandForm.get('name')?.hasError('required')" 
+             class="text-red-500 text-xs font-medium mt-1.5 pl-1">
+           Brand name is required
+        </div>
+        
+      </div>
+
+      <!-- Save / Update Button Wrapper -->
+      <div class="flex justify-center mt-6 w-full">
+        <button 
+          type="submit" 
+          [disabled]="brandForm.invalid || isSubmitting"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-10 rounded-xl shadow-md transition duration-200 disabled:opacity-40 disabled:cursor-not-allowed w-full max-w-[200px]">
+          {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update Brand' : 'Save Brand') }}
+        </button>
+      </div>
+    </form>
+    
+  </div>
+</div>
+

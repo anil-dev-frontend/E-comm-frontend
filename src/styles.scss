@@ -2,6 +2,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+/* Angular Material MDC Form Field aur Tailwind Clash Fix */
+.mdc-notched-outline {
+  z-index: auto !important;
+}
+
+.mdc-notched-outline__leading,
+.mdc-notched-outline__notch,
+.mdc-notched-outline__trailing {
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-top: 1px solid !important;
+  border-bottom: 1px solid !important;
+}
+
+/* Beech ki extra vertical lines ko hatane ke liye strict rule */
+.mdc-notched-outline__leading {
+  border-right: none !important;
+}
+
+.mdc-notched-outline__trailing {
+  border-left: none !important;
+}
+
+.mdc-notched-outline__notch {
+  border-left: none !important;
+  border-right: none !important;
+}
