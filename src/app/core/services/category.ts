@@ -17,6 +17,11 @@ export class Category {
     return this.http.get<any>(this.baseUrl);
   }
 
+  getCustomerCategories(): Observable<any> {
+  return this.http.get<any>(`${environment.apiUrl}/home/categories`);
+}
+  
+
   // 2. Create Category (POST)
   createCategory(categoryData: { name: string }): Observable<any> {
     return this.http.post<any>(this.baseUrl, categoryData);
