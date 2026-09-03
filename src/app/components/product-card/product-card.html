@@ -1,32 +1,72 @@
-<div class="bg-white border border-gray-200 rounded-sm p-4 flex flex-col justify-between hover:shadow-sm transition h-full max-w-[280px] w-full mx-auto">
-  
+<div
+  class="bg-white border border-gray-200 rounded-sm p-4 flex flex-col justify-between hover:shadow-sm transition h-full max-w-[280px] w-full mx-auto cursor-pointer"
+  [routerLink]="['/products', product?._id]"
+>
   <div>
-    <!-- Image block box display check -->
-    <div class="w-full h-44 bg-gray-50 flex items-center justify-center overflow-hidden mb-4 border border-gray-100" [routerLink]="['/products', product?._id]">
-      <img *ngIf="product?.image && product.image.length > 0" 
-           [src]="product.image[0]" 
-           alt="product image" 
-           class="w-full h-full object-cover">
-      <span *ngIf="!product?.image || product.image.length === 0" class="text-xs text-gray-400">No Image</span>
+    <!-- Image -->
+    <div
+      class="w-full h-44 bg-gray-50 flex items-center justify-center overflow-hidden mb-4 border border-gray-100"
+    >
+      <img
+        *ngIf="product?.image && product.image.length > 0"
+        [src]="product.image[0]"
+        [alt]="product.name"
+        class="w-full h-full object-cover"
+      />
+
+      <span
+        *ngIf="!product?.image || product.image.length === 0"
+        class="text-xs text-gray-400"
+      >
+        No Image
+      </span>
     </div>
 
-    <!-- Product Label Title Section -->
-    <h3 class="text-base font-normal text-gray-900 leading-snug tracking-wide mb-4 min-h-[48px]">
+    <!-- Product Name -->
+    <h3
+      class="text-base font-normal text-gray-900 leading-snug tracking-wide mb-4 min-h-[48px]"
+    >
       {{ product?.name }}
     </h3>
   </div>
-  
-  <!-- Financial layout price and flat green layout actions button -->
+
+  <!-- Price + Add Cart -->
   <div class="flex items-center justify-between mt-auto pt-2">
-    <span class="text-sm font-bold text-gray-900 tracking-wide">
-      ₹{{ product?.price | number }}
-    </span>
-    
-    <button type="button" 
-            class="bg-[#4caf50] hover:bg-[#43a047] text-white text-[11px] font-normal px-2.5 py-1.5 rounded-sm shadow-sm transition active:scale-95 whitespace-nowrap">
+
+    <!-- Prices -->
+    <div class="flex flex-col">
+
+      <!-- Selling Price -->
+      <span class="text-sm font-bold text-gray-900 tracking-wide">
+        ₹{{ getSellingPrice() | number }}
+      </span>
+
+      <!-- Original Price + Discount -->
+      <div
+        *ngIf="product?.discount > 0"
+        class="flex items-center gap-1.5 mt-0.5"
+      >
+        <!-- Original Price -->
+        <span class="text-xs text-gray-400 line-through">
+          ₹{{ product?.price | number }}
+        </span>
+
+        <!-- Discount -->
+        <span class="text-[10px] font-semibold text-green-600">
+          {{ product?.discount }}% OFF
+        </span>
+      </div>
+
+    </div>
+
+    <!-- Add to Cart -->
+    <button
+      type="button"
+      (click)="$event.stopPropagation()"
+      class="bg-[#4caf50] hover:bg-[#43a047] text-white text-[11px] font-normal px-2.5 py-1.5 rounded-sm shadow-sm transition active:scale-95 whitespace-nowrap"
+    >
       Add to Cart
     </button>
+
   </div>
-
 </div>
-

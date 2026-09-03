@@ -28,4 +28,10 @@ export class Brand {
   deleteBrand(id: string): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/${id}`);
   }
+
+  getCustomerBrands(): Observable<any> {
+    return this.http.get<any>(
+      `${environment.apiUrl}/home/brands`
+    );
+  }
 }

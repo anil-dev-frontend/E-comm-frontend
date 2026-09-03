@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +30,28 @@ private baseUrl = `${environment.apiUrl}/product`;
 
   getProductById(id: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/${id}`);
+  }
+
+  // Search + Filter + Pagination
+  getProductList(
+    searchTerm: string = '',
+    categoryId: string = '',
+    brandId: string = '',
+    page: number = 1,
+    pageSize: number = 10
+  ): Observable<any> {
+
+    let params = new HttpParams()
+      .set('searchTerm', searchTerm)
+      .set('categoryId', categoryId)
+      .set('brandId', brandId)
+      .set('page', page)
+      .set('pageSize', pageSize);
+
+    return this.http.get<any>(
+      `${this.baseUrl}/list`,
+      { params }
+    );
   }
   
 }

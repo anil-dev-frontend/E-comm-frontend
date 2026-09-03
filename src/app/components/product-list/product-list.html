@@ -1,1 +1,311 @@
-<p>product-list works!</p>
+<div class="min-h-screen bg-gray-100 p-6">
+
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">
+                Products
+            </h1>
+            <p class="text-sm text-gray-500 mt-1">
+                {{ totalProducts }} products found
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+           <aside class="lg:col-span-1">
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 sticky top-5">
+
+    <!-- =========================
+         CATEGORY
+    ========================== -->
+    <div class="mb-5">
+
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Category
+      </label>
+
+      <select
+        [(ngModel)]="categoryId"
+        (change)="onFilterChange()"
+        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg bg-white outline-none focus:border-blue-500"
+      >
+
+        <option value="">
+          All Categories
+        </option>
+
+        @for (category of categories; track category._id) {
+
+          <option [value]="category._id">
+            {{ category.name }}
+          </option>
+
+        }
+
+      </select>
+
+    </div>
+
+
+    <!-- =========================
+         BRAND
+    ========================== -->
+    <div class="mb-5">
+
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Brand
+      </label>
+
+      <select
+        [(ngModel)]="brandId"
+        (change)="onFilterChange()"
+        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg bg-white outline-none focus:border-blue-500"
+      >
+
+        <option value="">
+          All Brands
+        </option>
+
+        @for (brand of brands; track brand._id) {
+
+          <option [value]="brand._id">
+            {{ brand.name }}
+          </option>
+
+        }
+
+      </select>
+
+    </div>
+
+
+    <!-- =========================
+         ORDER BY
+    ========================== -->
+    <div class="mb-5">
+
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Order By
+      </label>
+
+      <select
+            [(ngModel)]="sortOrder"
+            (change)="sortProducts()"
+            class="w-full px-3 py-2.5 border border-gray-300 rounded-lg bg-white outline-none focus:border-blue-500"
+            >
+            <option value="">Order By</option>
+
+            <option value="lowToHigh">
+                Price: Low to High
+            </option>
+
+            <option value="highToLow">
+                Price: High to Low
+            </option>
+       </select>
+    </div>
+
+
+    <!-- =========================
+         APPLY FILTERS
+    ========================== -->
+    <button
+      type="button"
+      (click)="onSearch()"
+      class="w-full py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+    >
+      Apply Filters
+    </button>
+
+  </div>
+
+</aside>
+
+            <!-- =========================
+           RIGHT SIDE
+      ========================== -->
+
+            <main class="lg:col-span-3">
+
+
+                <!-- =========================
+             SEARCH RESULT INFO
+        ========================== -->
+
+                @if (searchTerm) {
+
+                <div class="bg-white rounded-xl border border-gray-200 px-5 py-3 mb-5">
+
+                    <div class="flex items-center justify-between">
+
+                        <p class="text-sm text-gray-600">
+
+                            Search results for:
+
+                            <strong class="text-gray-900">
+                                "{{ searchTerm }}"
+                            </strong>
+
+                        </p>
+
+                        <button type="button" (click)="clearFilters()" class="text-sm text-red-500 hover:text-red-700">
+                            Clear Search
+                        </button>
+
+                    </div>
+
+                </div>
+
+                }
+
+
+                <!-- =========================
+             LOADING
+        ========================== -->
+
+                @if (loading) {
+
+                <div class="bg-white rounded-xl p-10 text-center">
+
+                    <div class="text-3xl mb-3">
+                        ⏳
+                    </div>
+
+                    <p class="text-gray-500">
+                        Loading products...
+                    </p>
+
+                </div>
+
+                }
+
+
+                <!-- =========================
+             NO PRODUCTS
+        ========================== -->
+
+                @if (!loading && products.length === 0) {
+
+                <div class="bg-white rounded-xl p-10 text-center">
+
+                    <div class="text-5xl mb-4">
+                        📦
+                    </div>
+
+                    <h3 class="text-lg font-semibold text-gray-700">
+                        No Products Found
+                    </h3>
+
+                    <p class="text-sm text-gray-500 mt-2">
+                        Try another product name or filter.
+                    </p>
+
+                    <button type="button" (click)="clearFilters()"
+                        class="mt-5 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        View All Products
+                    </button>
+
+                </div>
+
+                }
+
+
+                <!-- =========================
+             PRODUCT CARDS
+        ========================== -->
+
+                @if (!loading && products.length > 0) {
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+
+                    @for (prod of products; track prod._id) {
+
+                    <app-product-card [product]="prod">
+                    </app-product-card>
+
+                    }
+
+                </div>
+
+                }
+
+
+                <!-- =========================
+             PAGINATION
+        ========================== -->
+
+                @if (!loading && products.length > 0 && totalPages > 1) {
+
+                <div
+                    class="mt-6 bg-white rounded-xl border border-gray-200 px-5 py-4 flex items-center justify-between">
+
+                    <!-- Page Info -->
+
+                    <div>
+
+                        <p class="text-sm text-gray-500">
+
+                            Showing page
+
+                            <strong class="text-gray-800">
+                                {{ page }}
+                            </strong>
+
+                            of
+
+                            <strong class="text-gray-800">
+                                {{ totalPages }}
+                            </strong>
+
+                        </p>
+
+                        <p class="text-xs text-gray-400 mt-1">
+
+                            Total:
+                            {{ totalProducts }}
+                            products
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="flex gap-2">
+
+                        <!-- Previous -->
+
+                        <button type="button" (click)="previousPage()" [disabled]="page === 1"
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+                            ← Previous
+                        </button>
+
+
+                        <!-- Current Page -->
+
+                        <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-semibold text-gray-700">
+                            {{ page }}
+                        </span>
+
+
+                        <!-- Next -->
+
+                        <button type="button" (click)="nextPage()" [disabled]="page === totalPages"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed">
+                            Next →
+                        </button>
+
+                    </div>
+
+                </div>
+
+                }
+
+            </main>
+
+        </div>
+
+    </div>
+
+</div>
