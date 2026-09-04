@@ -147,25 +147,57 @@
 
           <!-- Buttons -->
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
+          <!-- Buttons -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
 
-            <button
-              type="button"
-              (click)="addToCart()"
-              class="h-12 rounded-lg border border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition"
-            >
-              Add to Cart
-            </button>
+  <!-- Add to Cart -->
+  <button
+    type="button"
+    (click)="addToCart()"
+    class="h-12 rounded-lg border border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition"
+  >
+    Add to Cart
+  </button>
 
-            <button
-              type="button"
-              (click)="buyNow()"
-              class="h-12 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
-            >
-              Buy Now
-            </button>
+  <!-- Buy Now -->
+  <button
+    type="button"
+    (click)="buyNow()"
+    class="h-12 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+  >
+    Buy Now
+  </button>
 
-          </div>
+</div>
+
+<!-- Wishlist -->
+<button
+  type="button"
+  (click)="addToWishList()"
+  class="mt-3 w-full h-12 rounded-lg border border-gray-300 flex items-center justify-center gap-2 text-gray-700 hover:bg-gray-50 transition"
+>
+  @if (isInWishlist()) {
+
+    <span class="material-icons text-red-500">
+      favorite
+    </span>
+
+    <span class="font-medium">
+      Remove from Wishlist
+    </span>
+
+  } @else {
+
+    <span class="material-icons">
+      favorite_border
+    </span>
+
+    <span class="font-medium">
+      Add to Wishlist
+    </span>
+
+  }
+</button>
 
         </div>
 

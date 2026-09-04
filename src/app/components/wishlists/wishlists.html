@@ -1,0 +1,44 @@
+<div class="px-40 py-10">
+
+  <!-- Heading -->
+  <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+    My Wishlist
+  </h2>
+
+  <!-- Wishlist Products -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+    @for (product of wishlistService.wishList; track product._id) {
+
+      <div>
+        <app-product-card
+          [product]="product">
+        </app-product-card>
+      </div>
+
+    }
+
+  </div>
+
+  <!-- Empty Wishlist -->
+  @if (wishlistService.wishList.length === 0) {
+
+    <div class="text-center py-16">
+
+      <span class="material-icons text-gray-300 text-6xl">
+        favorite_border
+      </span>
+
+      <h3 class="text-lg font-semibold text-gray-700 mt-4">
+        Your Wishlist is Empty
+      </h3>
+
+      <p class="text-sm text-gray-400 mt-1">
+        Add products to your wishlist and they will appear here.
+      </p>
+
+    </div>
+
+  }
+
+</div>

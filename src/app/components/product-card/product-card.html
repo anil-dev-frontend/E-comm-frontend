@@ -1,8 +1,9 @@
 <div
   class="bg-white border border-gray-200 rounded-sm p-4 flex flex-col justify-between hover:shadow-sm transition h-full max-w-[280px] w-full mx-auto cursor-pointer"
-  [routerLink]="['/products', product?._id]"
+  
 >
-  <div>
+  <div [routerLink]="['/products', product?._id]">
+
     <!-- Image -->
     <div
       class="w-full h-44 bg-gray-50 flex items-center justify-center overflow-hidden mb-4 border border-gray-100"
@@ -30,7 +31,7 @@
     </h3>
   </div>
 
-  <!-- Price + Add Cart -->
+  <!-- Price + Actions -->
   <div class="flex items-center justify-between mt-auto pt-2">
 
     <!-- Prices -->
@@ -46,6 +47,7 @@
         *ngIf="product?.discount > 0"
         class="flex items-center gap-1.5 mt-0.5"
       >
+
         <!-- Original Price -->
         <span class="text-xs text-gray-400 line-through">
           ₹{{ product?.price | number }}
@@ -55,18 +57,38 @@
         <span class="text-[10px] font-semibold text-green-600">
           {{ product?.discount }}% OFF
         </span>
-      </div>
 
+      </div>
     </div>
 
-    <!-- Add to Cart -->
-    <button
-      type="button"
-      (click)="$event.stopPropagation()"
-      class="bg-[#4caf50] hover:bg-[#43a047] text-white text-[11px] font-normal px-2.5 py-1.5 rounded-sm shadow-sm transition active:scale-95 whitespace-nowrap"
-    >
-      Add to Cart
-    </button>
+    <!-- Actions -->
+    <div class="flex items-center gap-2">
+
+      <!-- Favorite -->
+      <button
+        type="button"
+       (click)="addToWishList(product)"
+        class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-red-500 transition"
+      >
+      @if(isInWishlist(product)){
+       <span class="material-icons text-[21px]">favorite</span>
+      }@else{
+        <span class="material-icons text-[21px]">favorite_border</span>
+      }
+      </button>
+
+      <!-- Cart -->
+      <button
+        type="button"
+        class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-green-600 transition"
+      >
+        <span class="material-icons text-[21px]">
+         add_shopping_cart
+        </span>
+         <!-- <span class="material-icons text-[21px]">remove_shopping_cart</span> -->
+      </button>
+
+    </div>
 
   </div>
 </div>

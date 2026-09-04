@@ -11,7 +11,6 @@
 
         <!-- Search -->
         <div class="w-full max-w-md mx-4">
-
             <input
                 style="cursor: pointer;"
                 type="text"
@@ -19,54 +18,71 @@
                 [(ngModel)]="searchValue"
                 placeholder="Search..."
                 class="w-full px-3 py-1.5 bg-white text-gray-800 text-sm rounded outline-none border-none placeholder-gray-400 shadow-sm font-normal">
-
         </div>
 
 
         <!-- RIGHT SIDE -->
         <div class="flex items-center gap-4 text-sm font-medium">
 
-    <!-- Admin -->
-    <span
-        *ngIf="isLoggedIn && isAdmin"
-        class="cursor-pointer"
-        (click)="router.navigate(['/admin'])">
+            <!-- Admin -->
+            <span
+                *ngIf="isLoggedIn && isAdmin"
+                class="cursor-pointer"
+                (click)="router.navigate(['/admin'])">
+                Admin
+            </span>
 
-        Admin
+            <!-- Normal User -->
+            <span
+                *ngIf="isLoggedIn && !isAdmin"
+                class="cursor-pointer"
+                (click)="router.navigate(['/profile'])">
+                {{ userName }}
+            </span>
 
-    </span>
+            <!-- Wishlist -->
+            <button
+                *ngIf="isLoggedIn"
+                type="button"
+                routerLink="/wishlist"
+                class="flex items-center justify-center hover:opacity-80 transition"
+                title="Wishlist">
 
-    <!-- Normal User -->
-     <span
-    *ngIf="isLoggedIn && !isAdmin"
-    class="cursor-pointer"
-    (click)="router.navigate(['/profile'])">
-    {{ userName }}
-  </span>
+                <span class="material-icons text-red-500 text-[24px]">
+                    favorite
+                </span>
 
-    <!-- Logout -->
-    <button
-        *ngIf="isLoggedIn"
-        type="button"
-        (click)="logout()"
-        class="hover:text-blue-100 transition">
+            </button>
+            <button
+            *ngIf="isLoggedIn"
+            routerLink="/cart"
+            type="button"
+            class="w-8 h-8 flex items-center justify-center text-white hover:text-gray-200 transition"
+            >
+            <span class="material-icons text-[21px]">
+                add_shopping_cart
+            </span>
+            </button>
 
-        Logout
+            <!-- Logout -->
+            <button
+                *ngIf="isLoggedIn"
+                type="button"
+                (click)="logout()"
+                class="hover:text-blue-100 transition">
+                Logout
+            </button>
 
-    </button>
+            <!-- Login -->
+            <button
+                *ngIf="!isLoggedIn"
+                type="button"
+                routerLink="/login"
+                class="hover:text-blue-100 transition">
+                Login
+            </button>
 
-    <!-- Login -->
-    <button
-        *ngIf="!isLoggedIn"
-        type="button"
-        routerLink="/login"
-        class="hover:text-blue-100 transition">
-
-        Login
-
-    </button>
-
-</div>
+        </div>
 
     </div>
 
@@ -79,17 +95,13 @@
             *ngFor="let cat of categoryList"
             (click)="searchCategory(cat._id)"
             class="hover:text-blue-100 cursor-pointer transition py-0.5 whitespace-nowrap">
-
             {{ cat.name }}
-
         </a>
 
         <span
             *ngIf="categoryList.length === 0"
             class="text-xs text-blue-200 italic opacity-80">
-
             No categories available
-
         </span>
 
     </div>

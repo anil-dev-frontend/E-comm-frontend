@@ -3,6 +3,7 @@ import { Customerservice } from '../../core/services/customerservice';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductCard } from '../product-card/product-card';
+import { Wishlist } from '../../core/services/wishlist';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,7 @@ export class Home implements OnInit {
  @ViewChild('sliderContainer') sliderContainer!: ElementRef; // HTML scrolling hook capture
   
   private customerService = inject(Customerservice);
+  wishlistService = inject(Wishlist);
 
   newProducts: any[] = [];
   featuredProducts: any[] = [];
@@ -29,6 +31,7 @@ export class Home implements OnInit {
     this.loadNewProducts();
     this.loadFeaturedProducts();
     this.startAutoplay();
+    this.wishlistService.init();
   }
 
   ngOnDestroy(): void {

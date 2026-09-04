@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../core/services/product-service';
 import { CommonModule, DecimalPipe } from '@angular/common';
+import { Wishlist } from '../../core/services/wishlist';
 
 @Component({
   selector: 'app-product-detail',
@@ -14,17 +15,15 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 })
 export class ProductDetail implements OnInit {
 
- product: any = null;
-
+product: any = null;
   selectedImage = '';
-
   quantity = 1;
-
   reviews: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    public wishlistService: Wishlist
   ) {}
 
   ngOnInit(): void {
@@ -35,21 +34,23 @@ export class ProductDetail implements OnInit {
       behavior: 'smooth'
     });
 
-    this.route.params.subscribe(params => {
+    // Load wishlist first
+    this.wishlistService.init();
 
+    this.route.params.subscribe(params => {
       const id = params['id'];
 
       if (id) {
         this.getProduct(id);
       }
-
     });
-
   }
 
   getProduct(id: string): void {
+
     this.productService.getProductById(id).subscribe({
       next: (res) => {
+
         this.product = res.data;
 
         if (this.product?.image?.length > 0) {
@@ -57,13 +58,10 @@ export class ProductDetail implements OnInit {
         }
 
       },
-
       error: (error) => {
         console.error('PRODUCT DETAIL ERROR:', error);
       }
-
     });
-
   }
 
   selectImage(image: string): void {
@@ -81,18 +79,130 @@ export class ProductDetail implements OnInit {
   }
 
   addToCart(): void {
-    console.log('Add to Cart:', this.product, this.quantity);
+    console.log(
+      'Add to Cart:',
+      this.product,
+      this.quantity
+    );
   }
 
   buyNow(): void {
-    console.log('Buy Now:', this.product, this.quantity);
+    console.log(
+      'Buy Now:',
+      this.product,
+      this.quantity
+    );
+  }
+
+  // =========================
+  // WISHLIST
+  // =========================
+
+  isInWishlist(): boolean {
+
+    if (!this.product) {
+      return false;
+    }
+
+    const isExist = this.wishlistService.wishList.find(
+      (x: any) => x._id === this.product._id
+    );
+
+    if (isExist) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  addToWishList(): void {
+
+    if (!this.product?._id) {
+      return;
+    }
+
+    // Check product already exists
+    const isExist = this.wishlistService.wishList.find(
+      (x: any) => x._id === this.product._id
+    );
+
+    if (isExist) {
+
+      // =========================
+      // REMOVE FROM WISHLIST
+      // =========================
+
+      this.wishlistService
+        .removeFromWishlist(this.product._id)
+        .subscribe({
+          next: (result) => {
+
+            console.log(
+              'Removed from wishlist:',
+              result
+            );
+
+            this.wishlistService.wishList =
+              this.wishlistService.wishList.filter(
+                (x: any) => x._id !== this.product._id
+              );
+          },
+
+          error: (error) => {
+            console.error(
+              'Remove wishlist error:',
+              error
+            );
+          }
+        });
+
+    } else {
+
+      // =========================
+      // ADD TO WISHLIST
+      // =========================
+
+      this.wishlistService
+        .addToWishlist(this.product._id)
+        .subscribe({
+          next: (result) => {
+
+            console.log(
+              'Added to wishlist:',
+              result
+            );
+
+            // Local wishlist update
+            this.wishlistService.wishList.push(
+              this.product
+            );
+          },
+
+          error: (error) => {
+            console.error(
+              'Add wishlist error:',
+              error
+            );
+          }
+        });
+    }
   }
 
   getSellingPrice(): number {
-  const price = Number(this.product?.price || 0);
-  const discount = Number(this.product?.discount || 0);
 
-  return Number((price - (price * discount / 100)).toFixed(2));
-}
+    const price = Number(
+      this.product?.price || 0
+    );
 
+    const discount = Number(
+      this.product?.discount || 0
+    );
+
+    return Number(
+      (
+        price -
+        (price * discount / 100)
+      ).toFixed(2)
+    );
+  }
 }

@@ -15,6 +15,8 @@ import { ResetPassword } from './components/reset-password/reset-password';
 import { AdminDashboard } from './components/manage/admin-dashboard/admin-dashboard';
 import { authGuard } from './core/guards/auth-guard';
 import { CustomerProfile } from './components/customer-profile/customer-profile';
+import { Wishlists } from './components/wishlists/wishlists';
+import { ShoppingCart } from './components/shopping-cart/shopping-cart';
 
 export const routes: Routes = [
     {
@@ -98,7 +100,16 @@ export const routes: Routes = [
   {
   path: 'profile',
   component: CustomerProfile,
-  
+  },
+  {
+  path: 'wishlist',
+  component: Wishlists,
+  canActivate: [authGuard]
+  },
+  {
+  path: 'cart',
+  component: ShoppingCart,
+  canActivate: [authGuard]
   }
 
 ];
